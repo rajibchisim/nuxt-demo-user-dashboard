@@ -1,42 +1,49 @@
 <template>
-  <div class="">
-    <div class="main-layout">
-      <div class="sidebar">
-        <div class="branding">
-          <img src="@/static/sample_logo.png" alt="">
+  <div>
+    <div class="fixed-header">
+      <header class="main-header">
+        <div class="container">
+          <div class="branding">
+            <img src="@/static/sample_logo.png" alt="">
+          </div>
         </div>
-        <nav class="navigations" />
-      </div>
-      <div class="main">
-        <div class="users-grid">
-          <div v-for="user in users" :key="user.id" class="user-grid-item">
-            <div class="user">
-              <figure class="user-image-wrapper">
-                <img :src="user.image" alt="">
-              </figure>
-              <figcaption class="user-info-wrapper">
-                <div class="user-email">
-                  <img src="@/static/email.svg" alt="">
-                </div>
-                <div class="user-info-content">
-                  <h1 class="user-name">
-                    {{ user.name }}
-                  </h1>
-                  <p class="user-place">
-                    {{ user.address.city }}
-                  </p>
-                </div>
-              </figcaption>
+      </header>
+    </div>
+    <div class="container">
+      <div class="main-layout">
+        <div class="sidebar">
+          <nav class="navigations">
+            <ul>
+              <li><a href="#">Users</a></li>
+              <li><a href="#">Add user</a></li>
+              <li><a href="#">Settings</a></li>
+              <li>
+                <a href="#">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                  </svg>Logout</a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+        <div class="main">
+          <div class="users-grid">
+            <div v-for="user in users" :key="user.id" class="user-grid-item">
+              <user-profile :user="user" @showmodal="showModal" />
             </div>
           </div>
         </div>
       </div>
     </div>
+    <user-modal v-if="modalUser" :user="modalUser" @modalclose="modalClose" />
   </div>
 </template>
 
 <script>
+import UserModal from '~/components/UserModal.vue'
+import UserProfile from '~/components/UserProfile.vue'
 export default {
+  components: { UserProfile, UserModal },
   data () {
     return {
       users: [
@@ -136,7 +143,17 @@ export default {
           phone: '2-586-493-6943',
           website: 'jacynthe.com'
         }
-      ]
+      ],
+      modalUser: null
+    }
+  },
+  methods: {
+    showModal (user) {
+      this.modalUser = user
+    },
+    modalClose () {
+      console.log('modal Close')
+      this.modalUser = null
     }
   }
 }
@@ -149,61 +166,9 @@ export default {
   padding-top: 64px;
 }
 .user-grid-item {
-  width: 25%;
+  width: 33.33%;
   position: relative;
   padding: 0 16px;
   margin-bottom: 32px;
-}
-.user {
-  position: relative;
-}
-.user-name {
-  font-size: 22px;
-}
-.user-place {
-  font-size: 18px;
-}
-.user-image-wrapper {
-  width: 100%;
-  height: 0;
-  padding-bottom: 120%;
-  position: relative;
-  overflow: hidden;
-}
-.user-image-wrapper img {
-  display: block;
-  width: 100%;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-.user-info-wrapper {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,.25);
-  top: 0;
-  left: 0;
-  color: #fff;
-  text-align: center;
-}
-.user-info-content {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-.user-email {
-  position: absolute;
-  width: 24px;
-  height: 24px;
-  top: 8px;
-  right: 8px;
-  img {
-    width: 100%;
-  }
 }
 </style>

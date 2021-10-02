@@ -9,10 +9,12 @@ export const mutations = {
   loginSuccess (state, userData) {
     state.authenticated = true
     state.user = userData
+    localStorage.setItem('user', JSON.stringify(state.user))
   },
   loginFailure (state) {
     state.authenticated = false
     state.user = null
+    localStorage.setItem('user', null)
   }
 }
 
