@@ -54,7 +54,12 @@
 
 <script>
 export default {
-  props: ['user'],
+  props: {
+    user: {
+      type: Object,
+      default () { return {} }
+    }
+  },
   computed: {
     addressline () {
       return `${this.user.address.street}, ${this.user.address.city}`
@@ -62,7 +67,6 @@ export default {
   },
   methods: {
     modalClose () {
-      console.log('user modal click')
       this.$emit('modalclose')
     }
   }

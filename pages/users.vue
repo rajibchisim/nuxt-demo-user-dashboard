@@ -152,7 +152,6 @@ export default {
       this.modalUser = user
     },
     modalClose () {
-      console.log('modal Close')
       this.modalUser = null
     }
   }

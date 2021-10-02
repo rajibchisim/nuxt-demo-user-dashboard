@@ -23,7 +23,12 @@
 
 <script>
 export default {
-  props: ['user'],
+  props: {
+    user: {
+      type: Object,
+      default () { return {} }
+    }
+  },
   methods: {
     showDetails () {
       this.$emit('showmodal', this.user)

@@ -21,7 +21,6 @@ export const mutations = {
 export const actions = {
   serverAuthResponse (context, credencials) {
     return new Promise((resolve, reject) => {
-      console.log(credencials)
       setTimeout(() => {
         if (credencials.userid === 'admin' && credencials.password === '1234') {
           resolve({
