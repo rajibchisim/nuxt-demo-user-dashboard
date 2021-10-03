@@ -14,14 +14,19 @@
         <div class="sidebar">
           <nav class="navigations">
             <ul>
-              <li><a href="#">Users</a></li>
+              <li>
+                <nuxt-link to="/users">
+                  Users
+                </nuxt-link>
+              </li>
               <li><a href="#">Add user</a></li>
               <li><a href="#">Settings</a></li>
               <li>
-                <a href="#">
+                <a href="#" @click.prevent="logout">
                   <svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                  </svg>Logout</a>
+                  </svg>Logout
+                </a>
               </li>
             </ul>
           </nav>
@@ -153,6 +158,9 @@ export default {
     },
     modalClose () {
       this.modalUser = null
+    },
+    logout () {
+      this.$store.dispatch('logout')
     }
   }
 }

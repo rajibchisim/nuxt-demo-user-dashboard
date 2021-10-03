@@ -13,9 +13,12 @@
             <input v-model="password" class="form-input" type="password" placeholder="Password">
           </div>
           <div class="form-row">
-            <input type="checkbox">
-            <label for="">Keep me signed in</label>
+            <input id="remember" type="checkbox">
+            <label for="remember">Keep me signed in</label>
           </div>
+          <transition>
+            <div v-show="loginError" class="form-error" v-text="loginErrorMsg" />
+          </transition>
           <button>Sign in </button>
         </form>
       </div>
@@ -28,15 +31,30 @@ export default {
   data () {
     return {
       userid: '',
-      password: ''
+      password: '',
+      loginErrorMsg: '',
+      loginError: false
     }
   },
   methods: {
-    loginUser () {
-      this.$store.dispatch('authenticate', {
-        userid: this.userid,
-        password: this.password
-      })
+    async loginUser () {
+      if (this.userid === '' || this.password === '') {
+        this.showError('Username and password is required')
+        return
+      }
+      try {
+        await this.$store.dispatch('authenticate', {
+          userid: this.userid,
+          password: this.password
+        })
+      } catch {
+        this.showError('Incorrect username or password')
+      }
+    },
+    showError (msg) {
+      this.loginError = true
+      this.loginErrorMsg = msg
+      setTimeout(() => { this.loginError = false }, 2000)
     }
   }
 }

@@ -1,7 +1,13 @@
 export const state = function () {
-  return {
-    authenticated: false,
-    user: null
+  if (process.server) {
+    return {
+      authenticated: false,
+      user: null
+    }
+  } else {
+    return {
+      authenticated: !!localStorage.getItem('auth')
+    }
   }
 }
 
@@ -9,12 +15,17 @@ export const mutations = {
   loginSuccess (state, userData) {
     state.authenticated = true
     state.user = userData
-    localStorage.setItem('user', JSON.stringify(state.user))
+    localStorage.setItem('auth', JSON.stringify(state.authenticated))
   },
   loginFailure (state) {
     state.authenticated = false
     state.user = null
-    localStorage.setItem('user', null)
+    localStorage.removeItem('auth')
+  },
+  logout (state) {
+    state.authenticated = false
+    state.user = null
+    localStorage.removeItem('auth')
   }
 }
 
@@ -36,14 +47,25 @@ export const actions = {
       }, 1000)
     })
   },
-  async authenticate ({ commit, dispatch }, payload) {
-    // eslint-disable-next-line
-    const response  = await dispatch('serverAuthResponse', payload)
-    if (response.msg === 'success') {
-      commit('loginSuccess', response.payload)
-      this.$router.push('/users')
-    } else {
-      commit('loginFailure')
+  authenticate ({ commit, dispatch }, payload) {
+    return new Promise((resolve, reject) => {
+      dispatch('serverAuthResponse', payload).then((response) => {
+        if (response.msg === 'success') {
+          commit('loginSuccess', response.payload)
+          this.$router.push('/users')
+          resolve()
+        } else {
+          reject(new Error('unauthenticated'))
+        }
+      }).catch((error) => {
+        commit('loginFailure')
+        reject(new Error(error.message))
+      })
     }
+    )
+  },
+  logout ({ commit }) {
+    commit('logout')
+    this.$router.push('login')
   }
 }
