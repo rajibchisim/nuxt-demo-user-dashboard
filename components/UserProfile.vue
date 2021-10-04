@@ -4,11 +4,11 @@
       <img :src="user.image" alt="" loading="lazy">
     </figure>
     <figcaption class="user-info-wrapper">
-      <div class="user-email">
+      <a class="user-email" target="_blank" :href="mailcontent">
         <svg xmlns="http://www.w3.org/2000/svg" class="icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
         </svg>
-      </div>
+      </a>
       <div class="user-info-content">
         <h1 class="user-name">
           {{ user.name }}
@@ -29,6 +29,12 @@ export default {
       default () { return {} }
     }
   },
+  computed: {
+    mailcontent () {
+      const { email, name } = this.user
+      return `mailto:${email}?subject=We are hiring!&body=Hello, ${name}. We’d like to propose you an offer.`
+    }
+  },
   methods: {
     showDetails () {
       this.$emit('showmodal', this.user)
@@ -46,10 +52,16 @@ export default {
 .user-name {
   font-size: 22px;
   margin-bottom: 6px;
+  transition: all 300ms ease-out;
+  opacity: 0;
+  transform: translateY(-15px);
 }
 .user-place {
   font-size: 16px;
   text-transform: uppercase;
+  transition: all 300ms ease-out;
+  opacity: 0;
+  transform: translateY(15px);
 }
 .user-image-wrapper {
   width: 100%;
@@ -69,6 +81,14 @@ export default {
 .user:hover {
   .user-info-wrapper {
     background: rgba(0,0,0,.4);
+  }
+  .user-name {
+    transform: translateY(0);
+    opacity: 100;
+  }
+  .user-place {
+    transform: translateY(0);
+    opacity: 100;
   }
 }
 .user-info-wrapper {
@@ -97,6 +117,9 @@ export default {
   right: 8px;
   img {
     width: 100%;
+  }
+  &:hover {
+    transform: scale(1.2);
   }
 }
 </style>
